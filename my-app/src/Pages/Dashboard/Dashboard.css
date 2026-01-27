@@ -1,0 +1,162 @@
+/* Page background */
+.dash {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #1a1a1a 0%, #0b0b0b 45%, #050505 100%);
+  color: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Top bar */
+.dash_topbar {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 18px 28px;
+}
+
+.dash_brand {
+  color: #e50914;
+  font-weight: 800;
+  letter-spacing: 2px;
+  font-size: 18px;
+}
+
+.dash_nav {
+  display: flex;
+  gap: 18px;
+}
+
+.dash_link {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.dash_link_active,
+.dash_link:hover {
+  color: #ffffff;
+}
+
+/* Layout */
+.dash_wrap {
+  width: min(1100px, 92vw);
+  margin: 0 auto;
+  padding: 14px 0 40px;
+}
+
+/* Panels */
+.dash_panel {
+  background: rgba(25, 25, 25, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.55);
+  padding: 22px 26px;
+  margin-top: 18px;
+}
+
+.dash_panel_title {
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* Grid */
+.dash_grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+}
+
+@media (max-width: 820px) {
+  .dash_grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dash_subtitle {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+/* Love list */
+.dash_list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dash_list_item {
+  display: flex;
+  gap: 8px;
+  margin: 6px 0;
+  font-size: 13px;
+}
+
+.dash_check {
+  color: #1ed760;
+  font-weight: 700;
+}
+
+/* Bars */
+.dash_bars {
+  display: grid;
+  gap: 12px;
+}
+
+.dash_bar_row {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.dash_bar_label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.dash_bar_track {
+  height: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dash_bar_fill {
+  height: 100%;
+  background: #e50914;
+}
+
+/* Watch history */
+.dash_history_row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(110px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .dash_history_row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .dash_history_row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.dash_tile {
+  height: 120px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dash_tile_image {
+  width: 60%;
+  height: 60%;
+  background: rgba(255, 255, 255, 0.08);
+  object-fit: cover;
+}
