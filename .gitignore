@@ -1,9 +1,22 @@
-# Ignore Google Takeout data
-Takeout Collection/
-
-# Ignore parser output
-parsed_output/
-
-# Python stuff
+# Python cache
 __pycache__/
 *.pyc
+*.pyo
+
+# Pytest
+.pytest_cache/
+
+# Your project-specific
+python/__pycache__/
+python/.pytest_cache/
+tests/__pycache__/
+
+# Output files
+python/parsed_output/
+
+# VERY IMPORTANT (private data)
+python/Takeout Collection/
+
+# OS junk
+.DS_Store
+Thumbs.db
