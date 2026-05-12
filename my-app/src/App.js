@@ -5,8 +5,8 @@ import Dashboard from './Pages/Dashboard/Dashboard';
 
 function App() {
   return (
-    // <Landing />
-    <Dashboard />
+    <Landing />
+    // <Dashboard />
   );
 }
 
