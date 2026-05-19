@@ -3,7 +3,6 @@
 title NETFEELINGS Web Application UML Aspect
 
 package "Frontend React Application" {
-
   class App {
     +render()
   }
@@ -13,17 +12,19 @@ package "Frontend React Application" {
     +render()
   }
 
-  class Dashboard {
-    -prefs: String[]
-    -aspectPrefs: AspectPreference[]
-    -history: Movie[]
-    +render()
-  }
-
   class UploadTakeoutForm {
     +selectedFile: File
     +validateFile()
-    +uploadTakeout()
+    +requestUploadUrl()
+    +uploadToS3()
+  }
+
+  class Dashboard {
+    -tasteProfile: TasteProfile
+    -history: WatchHistory
+    -recommendations: Recommendation[]
+    +loadResults()
+    +render()
   }
 
   class TopNavigation {
@@ -53,16 +54,25 @@ package "Frontend React Application" {
 }
 
 package "User and Data Models" {
-
   class User {
     +userId: String
     +sessionId: String
   }
 
   class TakeoutUpload {
+    +uploadId: String
     +fileName: String
     +fileType: String
     +uploadTime: Date
+    +status: String
+    +s3RawKey: String
+    +s3ParsedKey: String
+  }
+
+  class ParsedTakeoutData {
+    +records: Object[]
+    +counts: Object
+    +generatedAt: Date
   }
 
   class TasteProfile {
@@ -77,6 +87,7 @@ package "User and Data Models" {
 
   class WatchHistory {
     +movies: Movie[]
+    +youtubeVideos: Object[]
   }
 
   class Movie {
@@ -94,20 +105,30 @@ package "User and Data Models" {
 }
 
 package "AWS Backend" {
-
   class APIGateway {
-    +receiveUploadRequest()
-    +routeToLambda()
-    +routeToAIModel()
+    +createPresignedUploadUrl()
+    +getProcessingStatus()
+    +getRecommendations()
   }
 
-  class UploadLambda {
+  class S3RawTakeoutBucket {
+    +storeRawTakeoutZip()
+  }
+
+  class ParserLambda {
+    +downloadTakeoutFromS3()
     +processTakeoutFile()
     +extractWatchHistory()
-    +storeParsedData()
+    +writeParsedOutput()
+  }
+
+  class S3ParsedOutputBucket {
+    +storeCentralOutputJson()
+    +storeJsonlFiles()
   }
 
   class RecommendationLambda {
+    +loadParsedTakeoutData()
     +prepareUserData()
     +requestAIRecommendations()
     +returnRecommendations()
@@ -116,20 +137,14 @@ package "AWS Backend" {
   class Database {
     +users
     +uploads
-    +movies
     +watchHistory
     +tasteProfiles
     +recommendations
-  }
-
-  class S3Bucket {
-    +storeRawTakeoutFile()
-    +retrieveTakeoutFile()
+    +processingStatus
   }
 }
 
 package "AI Recommendation System" {
-
   class AIModel {
     +analyzeWatchHistory()
     +generateTasteProfile()
@@ -153,29 +168,31 @@ App --> Landing : displays upload page
 App --> Dashboard : displays results
 
 Landing --> UploadTakeoutForm : contains
-UploadTakeoutForm --> TakeoutUpload : creates
-UploadTakeoutForm --> APIGateway : uploads file
+UploadTakeoutForm --> APIGateway : requests upload URL
+APIGateway --> S3RawTakeoutBucket : creates presigned URL
+UploadTakeoutForm --> S3RawTakeoutBucket : uploads Takeout ZIP
 
-APIGateway --> UploadLambda : sends upload request
-UploadLambda --> S3Bucket : stores raw Takeout file
-UploadLambda --> WatchHistory : extracts data
-UploadLambda --> Database : stores parsed data
+S3RawTakeoutBucket --> ParserLambda : triggers parse event
+ParserLambda --> S3RawTakeoutBucket : downloads raw ZIP
+ParserLambda --> ParsedTakeoutData : creates
+ParserLambda --> S3ParsedOutputBucket : stores parsed JSON output
+ParserLambda --> Database : updates upload status
 
 Dashboard --> APIGateway : requests results
-APIGateway --> RecommendationLambda : sends recommendation request
+APIGateway --> RecommendationLambda : routes request
+RecommendationLambda --> S3ParsedOutputBucket : loads parsed data
+RecommendationLambda --> Database : loads user/upload info
+RecommendationLambda --> AIModel : sends parsed watch data
 
-RecommendationLambda --> Database : gets watch history
-RecommendationLambda --> AIModel : sends user data
 AIModel --> TasteProfile : creates
 AIModel --> Recommendation : creates
-
 AIModel --> BERTModel : uses
 AIModel --> NCFModel : uses
 AIModel --> ContentAIModel : uses
 
 RecommendationLambda --> Database : stores recommendations
-RecommendationLambda --> APIGateway : returns results
-APIGateway --> Dashboard : sends profile and recommendations
+RecommendationLambda --> APIGateway : returns profile and recommendations
+APIGateway --> Dashboard : sends results
 
 Dashboard --> TopNavigation : contains
 Dashboard --> TasteProfilePanel : contains
@@ -196,6 +213,7 @@ User "1" --> "many" TakeoutUpload
 User "1" --> "1" WatchHistory
 User "1" --> "1" TasteProfile
 User "1" --> "many" Recommendation
+TakeoutUpload "1" --> "1" ParsedTakeoutData
 WatchHistory "1" --> "many" Movie
 TasteProfile "1" --> "many" AspectPreference
 
