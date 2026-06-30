@@ -1,101 +1,354 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(229, 9, 20, .18),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(90, 70, 255, .12),
+      transparent 40%
+    ),
+    #070707;
+
+  color: white;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
 .landing {
   min-height: 100vh;
 
-  display:flex;
+  display: flex;
 
-  align-items:center;
+  align-items: center;
 
-  justify-content:center;
+  justify-content: center;
 
-  background:
-  radial-gradient(
-    circle at top left,
-    rgba(229,9,20,.25),
-    transparent 30%
-  ),
-
-  #080808;
-
-  color:white;
+  padding: 40px;
 }
 
 .landing_card {
 
-  width:min(620px,90vw);
+  width: min(700px, 92vw);
 
-  padding:60px;
+  padding:
+    70px
+    70px
+    55px;
 
-  border-radius:36px;
+  border-radius: 36px;
 
   background:
+    rgba(
+      255,
+      255,
+      255,
+      .04
+    );
 
-  rgba(255,255,255,.04);
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      .08
+    );
 
-  backdrop-filter:blur(20px);
+  backdrop-filter:
+    blur(30px);
 
-  text-align:center;
+  box-shadow:
+    0 25px 90px
+    rgba(
+      0,
+      0,
+      0,
+      .45
+    );
+
+  text-align:
+    center;
+
+  animation:
+    fadeUp
+    .8s
+    ease;
+}
+
+@keyframes fadeUp {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(
+        40px
+      );
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(
+        0
+      );
+  }
+
 }
 
 .landing_card h1 {
 
-font-size:72px;
+  font-size:
+    clamp(
+      54px,
+      8vw,
+      84px
+    );
 
-margin-bottom:20px;
+  font-weight:
+    900;
+
+  letter-spacing:
+    -3px;
+
+  margin-bottom:
+    18px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #ffffff,
+      #e50914
+    );
+
+  -webkit-background-clip:
+    text;
+
+  -webkit-text-fill-color:
+    transparent;
 }
 
 .landing_card p {
 
-opacity:.7;
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      .7
+    );
 
-line-height:1.8;
+  line-height:
+    1.9;
 
-margin-bottom:50px;
+  font-size:
+    18px;
+
+  max-width:
+    540px;
+
+  margin:
+    0 auto 50px;
 }
 
 .upload_box {
 
-display:flex;
+  display:
+    flex;
 
-flex-direction:column;
+  flex-direction:
+    column;
 
-gap:25px;
+  gap:
+    22px;
+}
+
+input[type=file] {
+
+  width:
+    100%;
+
+  padding:
+    26px;
+
+  border:
+    2px dashed
+    rgba(
+      255,
+      255,
+      255,
+      .12
+    );
+
+  border-radius:
+    24px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      .02
+    );
+
+  color:
+    white;
+
+  cursor:
+    pointer;
+
+  transition:
+    .25s;
+}
+
+input[type=file]:hover {
+
+  border-color:
+    rgba(
+      229,
+      9,
+      20,
+      .6
+    );
+
+  background:
+    rgba(
+      229,
+      9,
+      20,
+      .05
+    );
 }
 
 .selected {
 
-padding:14px;
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      .06
+    );
 
-background:
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      .08
+    );
 
-rgba(255,255,255,.08);
+  border-radius:
+    18px;
 
-border-radius:18px;
+  padding:
+    16px;
+
+  word-break:
+    break-word;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      .92
+    );
 }
 
-.upload_box button {
+button {
 
-height:62px;
+  height:
+    68px;
 
-border:none;
+  border:
+    none;
 
-border-radius:999px;
+  border-radius:
+    999px;
 
-background:
+  background:
+    linear-gradient(
+      90deg,
+      #e50914,
+      #ff3c3c
+    );
 
-#e50914;
+  color:
+    white;
 
-color:white;
+  font-size:
+    18px;
 
-font-size:18px;
+  font-weight:
+    800;
 
-font-weight:800;
+  cursor:
+    pointer;
 
-cursor:pointer;
+  transition:
+    .3s;
 }
 
-.upload_box button:hover {
+button:hover {
 
-transform:
+  transform:
+    translateY(
+      -3px
+    );
 
-translateY(-2px);
+  box-shadow:
+    0 14px 40px
+    rgba(
+      229,
+      9,
+      20,
+      .4
+    );
+}
+
+button:disabled {
+
+  opacity:
+    .65;
+
+  cursor:
+    not-allowed;
+
+  transform:
+    none;
+}
+
+@media (
+  max-width:
+  700px
+) {
+
+  .landing_card {
+
+    padding:
+      45px
+      25px;
+  }
+
+  .landing_card h1 {
+
+    font-size:
+      56px;
+  }
+
 }
