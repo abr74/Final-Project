@@ -10,12 +10,11 @@ export default function Landing({ onUploadSuccess }) {
   const [message, setMessage] = useState("");
 
   async function handleUpload() {
-    console.log("Upload button clicked");
-
     if (!file) {
       alert("Please select your Google Takeout ZIP file first.");
       return;
     }
+
     if (!file.name.toLowerCase().endsWith(".zip")) {
       alert("Only .zip files are allowed.");
       return;
@@ -36,17 +35,16 @@ export default function Landing({ onUploadSuccess }) {
       });
 
       const rawText = await urlResponse.text();
-      console.log("Raw upload URL response:", rawText);
 
       if (!urlResponse.ok) {
         throw new Error("Could not create upload URL.");
       }
 
       let uploadData = JSON.parse(rawText);
+
       if (uploadData.body && typeof uploadData.body === "string") {
         uploadData = JSON.parse(uploadData.body);
       }
-      console.log("Parsed upload data:", uploadData);
 
       if (!uploadData.uploadUrl) {
         throw new Error("Upload URL missing from Lambda response.");
@@ -54,26 +52,15 @@ export default function Landing({ onUploadSuccess }) {
 
       setMessage("Uploading Takeout ZIP to S3...");
 
-      // IMPORTANT: do NOT set a Content-Type header here.
-      // The SigV4 presigned URL does not sign Content-Type, so forcing
-      // one (application/zip) makes the browser's signature differ from
-      // what S3 expects -> 403 SignatureDoesNotMatch. Let the browser
-      // attach its own; SigV4 ignores it for signing.
-      // Also note: body is the raw File object, never FormData.
       const uploadResponse = await fetch(uploadData.uploadUrl, {
         method: "PUT",
         body: file
       });
 
-      console.log("S3 upload status:", uploadResponse.status);
-
       if (!uploadResponse.ok) {
-        const detail = await uploadResponse.text(); // S3 returns XML with the real reason
-        console.error("S3 upload failed:", detail);
         throw new Error(`Upload to S3 failed (${uploadResponse.status}).`);
       }
 
-      console.log("Uploaded object key:", uploadData.objectKey);
       setMessage("Upload complete. Processing recommendations...");
 
       setTimeout(() => {
@@ -91,22 +78,50 @@ export default function Landing({ onUploadSuccess }) {
   return (
     <div className="landing">
       <div className="landing_card">
+        <div className="brand_badge">Personalized YouTube Recommendations</div>
+
         <h1>YOUFEELINGS</h1>
-        <p>
-          Upload your Google Takeout ZIP file and discover personalized
-          recommendations based on your watch taste.
+
+        <p className="landing_intro">
+          Upload your Google Takeout ZIP to help generate recommendations
+          based on your YouTube taste.
         </p>
-        <div className="upload_box">
-          <input
-            type="file"
-            accept=".zip"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-          {file && <div className="selected">{file.name}</div>}
-          {message && <div className="selected">{message}</div>}
-          <button disabled={loading} onClick={handleUpload}>
-            {loading ? "Uploading..." : "Upload Takeout"}
-          </button>
+
+        <div className="method_grid">
+          <section className="method_card primary_method">
+            <div className="method_icon">📦</div>
+
+            <div>
+              <h2>Upload Google Takeout</h2>
+              <p>
+                Best option for real YouTube watch history. Upload your Takeout
+                ZIP and let YouFeelings process your data.
+              </p>
+            </div>
+
+            <div className="upload_box">
+              <label className="file_drop">
+                <input
+                  type="file"
+                  accept=".zip"
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
+                <span>Choose Takeout ZIP</span>
+                <small>Only .zip files are accepted</small>
+              </label>
+
+              {file && <div className="status_pill">{file.name}</div>}
+              {message && <div className="status_pill">{message}</div>}
+
+              <button
+                className="action_button"
+                disabled={loading}
+                onClick={handleUpload}
+              >
+                {loading ? "Uploading..." : "Upload Takeout"}
+              </button>
+            </div>
+          </section>
         </div>
       </div>
     </div>
