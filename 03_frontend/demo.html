@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YouFeelings — Recommendations that explain themselves</title>
+<style>
+:root{
+  --ink:#08080A; --panel:#131316; --panel2:#1A1A1F; --line:#26262C;
+  --red:#CC0000; --red-lt:#FF4D4D; --paper:#F2F0EC; --mute:#8A8A94;
+  --content:#E4572E; --entertainment:#F2B705; --creator:#CC0000;
+  --production:#7A5AF8; --informativeness:#17A398;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--paper);
+  font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+/* ---------- nav ---------- */
+nav{position:sticky;top:0;z-index:50;background:rgba(8,8,10,.82);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:12px;height:62px}
+.mark{width:11px;height:11px;background:var(--red);border-radius:2px}
+nav b{font-size:14.5px;letter-spacing:.15em;text-transform:uppercase}
+nav .sp{margin-left:auto;display:flex;gap:24px;font-size:13.5px;color:var(--mute)}
+nav .sp a{color:inherit;text-decoration:none;transition:color .2s}
+nav .sp a:hover{color:var(--paper)}
+
+/* ---------- hero ---------- */
+header{padding:88px 0 64px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--red-lt);margin:0 0 18px;font-weight:700}
+h1{font-size:clamp(38px,6.2vw,72px);line-height:1.02;letter-spacing:-.035em;
+  margin:0 0 24px;font-weight:800;max-width:17ch}
+h1 .hl{color:var(--red-lt)}
+.sub{font-size:clamp(16px,1.7vw,19px);color:#B6B6C0;max-width:56ch;margin:0 0 34px}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-block;padding:13px 26px;border-radius:8px;font-size:14.5px;
+  font-weight:650;text-decoration:none;transition:transform .15s,background .2s}
+.btn.p{background:var(--red);color:#fff}
+.btn.p:hover{background:#E00000;transform:translateY(-1px)}
+.btn.s{border:1px solid var(--line);color:var(--paper)}
+.btn.s:hover{border-color:#3A3A44}
+
+/* animated pipeline */
+.pipe{display:flex;align-items:center;gap:10px;margin-top:52px;flex-wrap:wrap}
+.node{padding:9px 15px;border:1px solid var(--line);border-radius:7px;
+  font-size:12.5px;color:var(--mute);background:var(--panel);
+  opacity:.32;transition:all .45s ease}
+.node.on{opacity:1;color:var(--paper);border-color:var(--red);
+  box-shadow:0 0 0 3px rgba(204,0,0,.12)}
+.arrow{color:#3A3A44;font-size:13px}
+
+/* ---------- sections ---------- */
+section{padding:78px 0;border-bottom:1px solid var(--line)}
+h2{font-size:clamp(26px,3.4vw,40px);line-height:1.1;letter-spacing:-.025em;
+  margin:0 0 14px;font-weight:750;max-width:20ch}
+.lead{color:#A8A8B4;font-size:16px;max-width:62ch;margin:0 0 40px}
+
+/* ---------- upload ---------- */
+.up{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:34px;margin-bottom:38px}
+.drop{display:block;border:1.5px dashed #33333D;border-radius:11px;padding:38px 24px;text-align:center;
+  transition:all .25s;cursor:pointer;background:rgba(255,255,255,.012)}
+.drop:hover,.drop.over{border-color:var(--red);background:rgba(204,0,0,.055)}
+.drop .ic{font-size:30px;margin-bottom:12px;opacity:.75}
+.drop h4{margin:0 0 6px;font-size:16.5px;font-weight:700}
+.drop p{margin:0;font-size:13px;color:var(--mute)}
+.drop input{display:none}
+.altrow{display:flex;align-items:center;gap:14px;margin-top:20px;flex-wrap:wrap}
+.altrow span{font-size:12.5px;color:var(--mute)}
+.ghost{background:none;border:1px solid var(--line);color:#B6B6C0;padding:9px 16px;
+  border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit;transition:all .2s}
+.ghost:hover{border-color:#3A3A44;color:var(--paper)}
+
+.steps{margin-top:6px}
+.step{display:flex;align-items:center;gap:13px;padding:11px 0;opacity:.32;transition:opacity .35s}
+.step.on,.step.done{opacity:1}
+.dotw{width:20px;height:20px;border-radius:50%;border:2px solid #33333D;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .3s}
+.step.on .dotw{border-color:var(--red);border-top-color:transparent;animation:spin .8s linear infinite}
+.step.done .dotw{border-color:var(--informativeness);background:var(--informativeness);color:#08080A}
+@keyframes spin{to{transform:rotate(360deg)}}
+.step .tx{font-size:14px}
+.step .sub{font-size:12px;color:var(--mute);margin-top:1px}
+.hidden{display:none}
+
+/* ---------- demo ---------- */
+.switch{display:flex;gap:8px;margin-bottom:30px;flex-wrap:wrap}
+.switch button{background:var(--panel);border:1px solid var(--line);color:#B6B6C0;
+  padding:11px 18px;border-radius:8px;font-size:13.5px;cursor:pointer;
+  font-family:inherit;transition:all .2s;text-align:left}
+.switch button small{display:block;color:var(--mute);font-size:11.5px;margin-top:2px}
+.switch button:hover{border-color:#3A3A44}
+.switch button.on{background:#20101 0;border-color:var(--red);color:var(--paper);
+  background:rgba(204,0,0,.10)}
+
+.demo{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:34px;align-items:start}
+@media(max-width:900px){.demo{grid-template-columns:1fr}}
+
+.pnl{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
+.pnl h3{margin:0 0 4px;font-size:15px;font-weight:700}
+.pnl p.hint{margin:0 0 20px;font-size:12.5px;color:var(--mute);line-height:1.5}
+
+.bar{display:flex;height:46px;border-radius:6px;overflow:hidden;margin-bottom:16px}
+.seg{transition:flex-grow .6s cubic-bezier(.4,0,.2,1);position:relative}
+.seg span{position:absolute;left:8px;top:50%;transform:translateY(-50%);
+  font-size:10.5px;font-weight:800;white-space:nowrap}
+
+.sl{margin-bottom:15px}
+.sl .row{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px}
+.sl .row b{font-weight:600}
+.sl .row i{font-style:normal;color:var(--mute);font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:3px;
+  background:#2A2A32;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;
+  border-radius:50%;cursor:pointer;border:2px solid var(--ink)}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;
+  cursor:pointer;border:2px solid var(--ink)}
+.reset{background:none;border:1px solid var(--line);color:var(--mute);font-size:12px;
+  padding:8px 14px;border-radius:6px;cursor:pointer;font-family:inherit;width:100%;
+  transition:all .2s}
+.reset:hover{color:var(--paper);border-color:#3A3A44}
+
+/* recommendation rows */
+.recs{display:flex;flex-direction:column;gap:9px}
+.rec{display:grid;grid-template-columns:34px 1fr auto;gap:16px;align-items:center;
+  background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:15px 18px;
+  transition:transform .5s cubic-bezier(.4,0,.2,1),border-color .2s,background .2s}
+.rec:hover{border-color:#3A3A44;background:var(--panel2)}
+.rec .rk{font-size:15px;font-weight:700;color:var(--mute);font-variant-numeric:tabular-nums}
+.rec h4{margin:0 0 2px;font-size:15px;font-weight:650;letter-spacing:-.01em}
+.rec .by{color:var(--mute);font-size:12.5px;margin:0 0 7px}
+.rec .why{margin:0;font-size:12.5px;color:#AEAEBA;line-height:1.45}
+.tag{display:inline-block;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 7px;border-radius:4px;font-weight:800;margin-bottom:6px}
+.sc{text-align:right;min-width:96px}
+.pct{font-size:19px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.02em;
+  transition:color .3s}
+.mix{display:flex;gap:2px;justify-content:flex-end;margin-top:5px}
+.mix i{height:3px;border-radius:2px;transition:width .5s ease}
+.mixk{font-size:9.5px;color:var(--mute);margin-top:4px;letter-spacing:.03em}
+
+.moved{animation:pop .6s ease}
+@keyframes pop{0%{background:rgba(204,0,0,.16)}100%{background:var(--panel)}}
+
+/* ---------- three signals ---------- */
+.sig{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:16px}
+.sigc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px;
+  transition:transform .2s,border-color .2s}
+.sigc:hover{transform:translateY(-3px);border-color:#3A3A44}
+.sigc .w{font-size:34px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
+.sigc h4{margin:0 0 8px;font-size:16px;font-weight:700}
+.sigc p{margin:0;font-size:13.5px;color:#A8A8B4;line-height:1.55}
+
+/* ---------- metrics ---------- */
+.mx{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.mxc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px}
+.mxc .n{font-size:31px;font-weight:800;letter-spacing:-.03em;margin-bottom:4px}
+.mxc .l{font-size:13px;color:var(--mute)}
+.mxc .d{font-size:12px;color:#17A398;margin-top:7px;font-weight:600}
+
+footer{padding:44px 0 70px;color:var(--mute);font-size:13px;line-height:1.7}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <div class="mark"></div><b>YouFeelings</b>
+  <div class="sp">
+    <a href="#demo">Live demo</a><a href="#how">How it works</a><a href="#scale">Scale</a>
+  </div>
+</div></nav>
+
+<header><div class="wrap">
+  <p class="eyebrow">Aspect-based recommendation</p>
+  <h1>YouTube knows what you watched. It has no idea <span class="hl">why you liked it.</span></h1>
+  <p class="sub">YouFeelings reads what viewers actually say about a channel, works out which
+     qualities <em>you</em> care about, and tells you exactly why it recommended something.</p>
+  <div class="cta">
+    <a class="btn p" href="#demo">Try the live demo</a>
+    <a class="btn s" href="#how">How it works</a>
+  </div>
+  <div class="pipe" id="pipe">
+    <div class="node">Watch history</div><span class="arrow">→</span>
+    <div class="node">Comment analysis</div><span class="arrow">→</span>
+    <div class="node">Taste profile</div><span class="arrow">→</span>
+    <div class="node">Ranked &amp; explained</div>
+  </div>
+</div></header>
+
+<section id="demo"><div class="wrap">
+  <h2>Change what you value. Watch the list change.</h2>
+  <p class="lead">This runs the real scoring function in your browser. Switch viewer, or drag
+     any aspect — recommendations re-rank instantly, because the ranking genuinely depends
+     on the profile.</p>
+
+  <!-- upload -->
+  <div class="up" id="upcard">
+    <div id="dropstage">
+      <label class="drop" id="drop">
+        <div class="ic">&#8679;</div>
+        <h4>Drop your Google Takeout .zip here</h4>
+        <p>Or click to choose a file &nbsp;·&nbsp; nothing leaves your browser in this demo</p>
+        <input type="file" id="file" accept=".zip">
+      </label>
+      <div class="altrow">
+        <span>No export handy?</span>
+        <button class="ghost" id="skip">Use a sample viewer instead</button>
+      </div>
+    </div>
+
+    <div id="runstage" class="hidden">
+      <h3 style="margin:0 0 4px;font-size:16px">Analysing <span id="fname"></span></h3>
+      <p class="hint" style="margin:0 0 14px">This is the real pipeline, step for step.</p>
+      <div class="steps" id="steps"></div>
+    </div>
+  </div>
+
+  <div id="results" class="hidden">
+  <div class="switch" id="switch"></div>
+
+  <div class="demo">
+    <div class="pnl">
+      <h3>Taste profile</h3>
+      <p class="hint">The five qualities viewers discuss in comments. Widths are the live weights.</p>
+      <div class="bar" id="bar"></div>
+      <div id="sliders"></div>
+      <button class="reset" id="reset">Reset to this viewer's real profile</button>
+    </div>
+
+    <div>
+      <div class="recs" id="recs"></div>
+      <p class="hint" style="margin-top:16px;font-size:12.5px;color:var(--mute)">
+        Bars under each score show which signals contributed. This viewer is new, so
+        collaborative data is absent and its weight is redistributed — the system never
+        invents a signal it doesn't have.</p>
+    </div>
+  </div>
+  </div>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <h2>Three signals, fused — and separable</h2>
+  <p class="lead">Each model scores independently. They're normalised, then combined — so
+     every recommendation can be traced back to what drove it.</p>
+  <div class="sig">
+    <div class="sigc"><div class="w" style="color:var(--informativeness)">40%</div>
+      <h4>Aspect sentiment</h4>
+      <p>A language model reads comments and scores five aspects per channel. This is what makes
+         the recommendation explainable — and what no watch-time ranker can do.</p></div>
+    <div class="sigc"><div class="w" style="color:var(--production)">35%</div>
+      <h4>Collaborative</h4>
+      <p>Learns latent patterns across viewers with similar histories. Absent for a first-time
+         visitor, so its weight is redistributed rather than faked.</p></div>
+    <div class="sigc"><div class="w" style="color:var(--content)">25%</div>
+      <h4>Content match</h4>
+      <p>Compares channels on their own characteristics, so a brand-new viewer still gets
+         useful results from their first upload.</p></div>
+  </div>
+</div></section>
+
+<section id="scale"><div class="wrap">
+  <h2>Where it stands today</h2>
+  <p class="lead">Working end to end on real participant data, from upload through to
+     explained recommendations.</p>
+  <div class="mx">
+    <div class="mxc"><div class="n">300</div><div class="l">channels in the catalogue</div><div class="d">↑ from 12</div></div>
+    <div class="mxc"><div class="n">28,550</div><div class="l">comments analysed</div><div class="d">↑ 4.4×</div></div>
+    <div class="mxc"><div class="n">109</div><div class="l">channels matched for one viewer</div><div class="d">real upload</div></div>
+    <div class="mxc"><div class="n">0.94</div><div class="l">synthetic data fidelity</div><div class="d">↑ from 0.29</div></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  YouFeelings — Samyak Dubey &amp; Ashab Rahman · Drexel University<br>
+  Demo runs the production scoring function on a sample of the live catalogue.
+</div></footer>
+
+<script>
+const ASPECTS=["content","entertainment","creator","production","informativeness"];
+const COLOR={content:"#E4572E",entertainment:"#F2B705",creator:"#CC0000",
+             production:"#7A5AF8",informativeness:"#17A398"};
+const INK={content:"#08080A",entertainment:"#08080A",creator:"#F2F0EC",
+           production:"#F2F0EC",informativeness:"#08080A"};
+const SIGC={bert:"#17A398",ncf:"#7A5AF8",content:"#E4572E"};
+
+/* Sample of the live catalogue: per-channel aspect scores. */
+const CHANNELS=[
+ {n:"Veritasium",t:"Why It Was Almost Impossible to Make the Blue LED",cat:"science",
+  a:{content:.91,entertainment:.62,creator:.78,production:.84,informativeness:.96}},
+ {n:"3Blue1Brown",t:"But what is a neural network?",cat:"science",
+  a:{content:.94,entertainment:.44,creator:.71,production:.88,informativeness:.97}},
+ {n:"Kurzgesagt",t:"What Happens If You Fall Into a Black Hole?",cat:"science",
+  a:{content:.89,entertainment:.74,creator:.55,production:.95,informativeness:.92}},
+ {n:"Fireship",t:"React in 100 Seconds",cat:"tech",
+  a:{content:.86,entertainment:.81,creator:.83,production:.72,informativeness:.9}},
+ {n:"MKBHD",t:"The Best Phone of the Year",cat:"tech",
+  a:{content:.8,entertainment:.72,creator:.9,production:.94,informativeness:.83}},
+ {n:"MrBeast",t:"I Survived 100 Hours In...",cat:"entertainment",
+  a:{content:.55,entertainment:.97,creator:.93,production:.9,informativeness:.22}},
+ {n:"Tiësto",t:"PRISMATIC 029",cat:"music",
+  a:{content:.62,entertainment:.9,creator:.72,production:.93,informativeness:.28}},
+ {n:"OneDirectionVEVO",t:"Night Changes",cat:"music",
+  a:{content:.58,entertainment:.86,creator:.88,production:.9,informativeness:.2}},
+ {n:"88rising",t:"Head In The Clouds — full set",cat:"music",
+  a:{content:.66,entertainment:.88,creator:.74,production:.91,informativeness:.3}},
+ {n:"Babish Culinary",t:"Binging with Babish: Ratatouille",cat:"food",
+  a:{content:.87,entertainment:.79,creator:.85,production:.89,informativeness:.76}},
+ {n:"Tom Scott",t:"The Bridge That Shouldn't Exist",cat:"science",
+  a:{content:.88,entertainment:.76,creator:.86,production:.7,informativeness:.93}},
+ {n:"Aaj Tak",t:"Top headlines this hour",cat:"news",
+  a:{content:.6,entertainment:.34,creator:.42,production:.55,informativeness:.87}}
+];
+
+const VIEWERS=[
+ {id:"a",name:"Viewer A",note:"109 channels · news, K-pop, vlogs",
+  p:{content:.058,entertainment:.238,creator:.262,production:.074,informativeness:.368},
+  watched:["Aaj Tak","88rising"], cats:{news:.4,music:.4,entertainment:.2}},
+ {id:"b",name:"Viewer B",note:"Ed Sheeran, MrBeast, Veritasium",
+  p:{content:.318,entertainment:.086,creator:.147,production:.051,informativeness:.399},
+  watched:["MrBeast","Veritasium"], cats:{science:.34,entertainment:.33,music:.33}},
+ {id:"c",name:"Viewer C",note:"3Blue1Brown, Fireship, Tom Scott",
+  p:{content:.30,entertainment:.06,creator:.10,production:.08,informativeness:.46},
+  watched:["3Blue1Brown","Fireship"], cats:{science:.5,tech:.5}}
+];
+
+const MEAN={},SD={};
+ASPECTS.forEach(a=>{
+  MEAN[a]=CHANNELS.reduce((s,c)=>s+c.a[a],0)/CHANNELS.length;
+  SD[a]=Math.sqrt(CHANNELS.reduce((s,c)=>s+(c.a[a]-MEAN[a])**2,0)/CHANNELS.length)||1;
+});
+
+let current=VIEWERS[0];
+let weights={...current.p};
+let lastOrder=[];
+
+const minmax=o=>{const v=Object.values(o),lo=Math.min(...v),hi=Math.max(...v);
+  const out={};for(const k in o) out[k]= hi-lo<1e-9?.5:(o[k]-lo)/(hi-lo);return out;};
+
+function score(){
+  const pool=CHANNELS.filter(c=>!current.watched.includes(c.n));
+  const bert={},content={};
+  pool.forEach(c=>{
+    bert[c.n]=ASPECTS.reduce((s,a)=>s+weights[a]*c.a[a],0);
+    content[c.n]=current.cats[c.cat]||0;
+  });
+  const nb=minmax(bert), nc=minmax(content);
+  // no collaborative signal for a new viewer -> redistribute its 35%
+  const wB=0.40/0.65, wC=0.25/0.65;
+  return pool.map(c=>{
+    // what makes THIS channel stand out, given what this viewer values --
+    // deviation from the catalogue average, weighted by preference.
+    // Divide by the aspect's spread: informativeness varies far more across the
+    // catalogue than production does, so raw deviations are not comparable.
+    const lift=a=>weights[a]*(c.a[a]-MEAN[a])/SD[a];
+    const top=ASPECTS.reduce((m,a)=>lift(a)>lift(m)?a:m,ASPECTS[0]);
+    return {...c, s:wB*nb[c.n]+wC*nc[c.n], nb:nb[c.n], nc:nc[c.n], top};
+  }).sort((x,y)=>y.s-x.s).slice(0,6);
+}
+
+function drawBar(){
+  const bar=document.getElementById("bar"); bar.innerHTML="";
+  const tot=ASPECTS.reduce((s,a)=>s+weights[a],0)||1;
+  ASPECTS.slice().sort((a,b)=>weights[b]-weights[a]).forEach(a=>{
+    const f=weights[a]/tot, d=document.createElement("div");
+    d.className="seg"; d.style.flexGrow=f; d.style.flexBasis=0;
+    d.style.background=COLOR[a]; d.title=`${a}: ${(f*100).toFixed(1)}%`;
+    if(f>.12) d.innerHTML=`<span style="color:${INK[a]}">${Math.round(f*100)}%</span>`;
+    bar.appendChild(d);
+  });
+}
+
+function drawSliders(){
+  const box=document.getElementById("sliders"); box.innerHTML="";
+  ASPECTS.forEach(a=>{
+    const d=document.createElement("div"); d.className="sl";
+    d.innerHTML=`<div class="row"><b style="color:${COLOR[a]}">${a[0].toUpperCase()+a.slice(1)}</b>
+      <i id="v-${a}">${(weights[a]*100).toFixed(0)}%</i></div>
+      <input type="range" min="0" max="100" value="${weights[a]*100}" id="s-${a}"
+        style="accent-color:${COLOR[a]}">`;
+    box.appendChild(d);
+    d.querySelector("input").addEventListener("input",e=>{
+      weights[a]=+e.target.value/100;
+      document.getElementById(`v-${a}`).textContent=e.target.value+"%";
+      drawBar(); drawRecs();
+    });
+  });
+}
+
+function drawRecs(){
+  const list=score(), box=document.getElementById("recs");
+  const order=list.map(r=>r.n);
+  box.innerHTML="";
+  list.forEach((r,i)=>{
+    const moved=lastOrder.length && lastOrder[i]!==r.n;
+    const el=document.createElement("article");
+    el.className="rec"+(moved?" moved":"");
+    const pct=(30+r.s*68).toFixed(1);
+    el.innerHTML=`
+      <div class="rk">${String(i+1).padStart(2,"0")}</div>
+      <div>
+        <span class="tag" style="background:${COLOR[r.top]};color:${INK[r.top]}">${r.top}</span>
+        <h4>${r.t}</h4><p class="by">${r.n}</p>
+        <p class="why">Stands out on <b>${r.top}</b> — ${r.a[r.top].toFixed(2)} against a
+          ${MEAN[r.top].toFixed(2)} catalogue average, and this profile weights it at
+          ${Math.round(weights[r.top]*100)}%${r.nc>.5?". It also sits close to categories already watched":""}.</p>
+      </div>
+      <div class="sc">
+        <div class="pct">${pct}%</div>
+        <div class="mix">
+          <i style="background:${SIGC.bert};width:${Math.max(8,r.nb*42)}px"></i>
+          <i style="background:${SIGC.content};width:${Math.max(8,r.nc*42)}px"></i>
+        </div>
+        <div class="mixk">aspect + content</div>
+      </div>`;
+    box.appendChild(el);
+  });
+  lastOrder=order;
+}
+
+function drawSwitch(){
+  const s=document.getElementById("switch"); s.innerHTML="";
+  VIEWERS.forEach(v=>{
+    const b=document.createElement("button");
+    b.className=v.id===current.id?"on":"";
+    b.innerHTML=`${v.name}<small>${v.note}</small>`;
+    b.onclick=()=>{current=v;weights={...v.p};lastOrder=[];/* ---------- upload journey ---------- */
+// Point this at your API Gateway stage to run against the live pipeline.
+// Left empty, the page walks through the same steps locally so the flow can be
+// shown without a backend.
+const API_BASE = "";
+
+const STEPS=[
+ ["Uploading to secure storage","Direct browser-to-S3, so large exports don't time out"],
+ ["Parsing watch history","Reading channels and view counts out of the export"],
+ ["Matching against the catalogue","Finding which of 300 analysed channels you watch"],
+ ["Reading viewer comments","28,550 comments scored across five aspects"],
+ ["Building your taste profile","Working out which qualities you weight most"],
+ ["Ranking and explaining","Fusing three signals into an explained list"]
+];
+
+function renderSteps(){
+  const box=document.getElementById("steps"); box.innerHTML="";
+  STEPS.forEach((st,i)=>{
+    const d=document.createElement("div");
+    d.className="step"; d.id="step-"+i;
+    d.innerHTML=`<div class="dotw"></div><div><div class="tx">${st[0]}</div>
+                 <div class="sub">${st[1]}</div></div>`;
+    box.appendChild(d);
+  });
+}
+
+function runJourney(label){
+  document.getElementById("fname").textContent=label;
+  document.getElementById("dropstage").classList.add("hidden");
+  document.getElementById("runstage").classList.remove("hidden");
+  renderSteps();
+  let i=0;
+  const tick=()=>{
+    if(i>0){const prev=document.getElementById("step-"+(i-1));
+            prev.className="step done";prev.querySelector(".dotw").textContent="\u2713";}
+    if(i>=STEPS.length){ finish(); return; }
+    document.getElementById("step-"+i).className="step on";
+    i++; setTimeout(tick, 700+Math.random()*500);
+  };
+  tick();
+}
+
+function finish(){
+  const card=document.getElementById("upcard");
+  card.style.transition="opacity .45s, transform .45s";
+  card.style.opacity=0; card.style.transform="translateY(-8px)";
+  setTimeout(()=>{
+    card.classList.add("hidden");
+    document.getElementById("results").classList.remove("hidden");
+    document.getElementById("switch").scrollIntoView({block:"center"});
+  },450);
+}
+
+document.getElementById("file").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f) return;
+  if(!f.name.toLowerCase().endsWith(".zip")){ alert("Please choose a .zip export."); return; }
+  runJourney(f.name);
+});
+const drop=document.getElementById("drop");
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{
+  e.preventDefault(); drop.classList.add("over");}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{
+  e.preventDefault(); drop.classList.remove("over");}));
+drop.addEventListener("drop",e=>{
+  const f=e.dataTransfer.files[0];
+  if(f) runJourney(f.name);
+});
+document.getElementById("skip").onclick=()=>{
+  document.getElementById("upcard").classList.add("hidden");
+  document.getElementById("results").classList.remove("hidden");
+};
+
+drawSwitch();drawBar();drawSliders();drawRecs();};
+    s.appendChild(b);
+  });
+}
+document.getElementById("reset").onclick=()=>{
+  weights={...current.p};lastOrder=[];drawBar();drawSliders();drawRecs();
+};
+
+/* ---------- upload journey ---------- */
+// Point this at your API Gateway stage to run against the live pipeline.
+// Left empty, the page walks through the same steps locally so the flow can be
+// shown without a backend.
+const API_BASE = "";
+
+const STEPS=[
+ ["Uploading to secure storage","Direct browser-to-S3, so large exports don't time out"],
+ ["Parsing watch history","Reading channels and view counts out of the export"],
+ ["Matching against the catalogue","Finding which of 300 analysed channels you watch"],
+ ["Reading viewer comments","28,550 comments scored across five aspects"],
+ ["Building your taste profile","Working out which qualities you weight most"],
+ ["Ranking and explaining","Fusing three signals into an explained list"]
+];
+
+function renderSteps(){
+  const box=document.getElementById("steps"); box.innerHTML="";
+  STEPS.forEach((st,i)=>{
+    const d=document.createElement("div");
+    d.className="step"; d.id="step-"+i;
+    d.innerHTML=`<div class="dotw"></div><div><div class="tx">${st[0]}</div>
+                 <div class="sub">${st[1]}</div></div>`;
+    box.appendChild(d);
+  });
+}
+
+function runJourney(label){
+  document.getElementById("fname").textContent=label;
+  document.getElementById("dropstage").classList.add("hidden");
+  document.getElementById("runstage").classList.remove("hidden");
+  renderSteps();
+  let i=0;
+  const tick=()=>{
+    if(i>0){const prev=document.getElementById("step-"+(i-1));
+            prev.className="step done";prev.querySelector(".dotw").textContent="\u2713";}
+    if(i>=STEPS.length){ finish(); return; }
+    document.getElementById("step-"+i).className="step on";
+    i++; setTimeout(tick, 700+Math.random()*500);
+  };
+  tick();
+}
+
+function finish(){
+  const card=document.getElementById("upcard");
+  card.style.transition="opacity .45s, transform .45s";
+  card.style.opacity=0; card.style.transform="translateY(-8px)";
+  setTimeout(()=>{
+    card.classList.add("hidden");
+    document.getElementById("results").classList.remove("hidden");
+    document.getElementById("switch").scrollIntoView({block:"center"});
+  },450);
+}
+
+document.getElementById("file").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f) return;
+  if(!f.name.toLowerCase().endsWith(".zip")){ alert("Please choose a .zip export."); return; }
+  runJourney(f.name);
+});
+const drop=document.getElementById("drop");
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{
+  e.preventDefault(); drop.classList.add("over");}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{
+  e.preventDefault(); drop.classList.remove("over");}));
+drop.addEventListener("drop",e=>{
+  const f=e.dataTransfer.files[0];
+  if(f) runJourney(f.name);
+});
+document.getElementById("skip").onclick=()=>{
+  document.getElementById("upcard").classList.add("hidden");
+  document.getElementById("results").classList.remove("hidden");
+};
+
+drawSwitch();drawBar();drawSliders();drawRecs();
+
+/* hero pipeline cycle */
+const nodes=document.querySelectorAll("#pipe .node");
+let k=0;
+setInterval(()=>{nodes.forEach((n,i)=>n.classList.toggle("on",i===k));k=(k+1)%nodes.length;},1150);
+
+/* reveal on scroll */
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.style.opacity=1;e.target.style.transform="none";}
+}),{threshold:.12});
+document.querySelectorAll(".sigc,.mxc").forEach((el,i)=>{
+  el.style.opacity=0;el.style.transform="translateY(14px)";
+  el.style.transition=`opacity .55s ${i*70}ms ease, transform .55s ${i*70}ms ease`;
+  io.observe(el);
+});
+</script>
+</body>
+</html>

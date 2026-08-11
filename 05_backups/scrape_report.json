@@ -1,0 +1,169 @@
+{
+  "run_timestamp": "2026-04-21T23:08:37.283555",
+  "total_raw": 19231,
+  "total_cleaned": 6532,
+  "pass_rate": "34.0%",
+  "categories": {
+    "music": {
+      "raw": 2599,
+      "cleaned": 335
+    },
+    "tech": {
+      "raw": 2099,
+      "cleaned": 715
+    },
+    "gaming": {
+      "raw": 2000,
+      "cleaned": 559
+    },
+    "cooking": {
+      "raw": 1605,
+      "cleaned": 669
+    },
+    "education": {
+      "raw": 1000,
+      "cleaned": 476
+    },
+    "fitness": {
+      "raw": 2000,
+      "cleaned": 552
+    },
+    "entertainment": {
+      "raw": 2000,
+      "cleaned": 366
+    },
+    "film_analysis": {
+      "raw": 1000,
+      "cleaned": 479
+    },
+    "news_commentary": {
+      "raw": 1375,
+      "cleaned": 735
+    },
+    "lifestyle": {
+      "raw": 1454,
+      "cleaned": 740
+    },
+    "self_improvement": {
+      "raw": 2099,
+      "cleaned": 906
+    }
+  },
+  "quota": {
+    "quota_used": 239,
+    "quota_remaining": 9761,
+    "api_calls": {
+      "videos.list": 45,
+      "commentThreads.list": 194
+    },
+    "errors": [
+      {
+        "video_id": "S4RHjFB4KGs",
+        "error": "HTTP 404",
+        "time": "2026-04-21T23:07:46.511252"
+      },
+      {
+        "video_id": "JtDro55e1GY",
+        "error": "HTTP 404",
+        "time": "2026-04-21T23:07:46.621586"
+      },
+      {
+        "video_id": "ryzOXAO0Npc",
+        "error": "HTTP 404",
+        "time": "2026-04-21T23:08:07.649025"
+      },
+      {
+        "video_id": "GfqD5WqChUQ",
+        "error": "HTTP 404",
+        "time": "2026-04-21T23:08:07.826737"
+      },
+      {
+        "video_id": "dLRLYHpS2DA",
+        "error": "HTTP 404",
+        "time": "2026-04-21T23:08:19.358527"
+      },
+      {
+        "video_id": "dA2FnziMCnk",
+        "error": "HTTP 404",
+        "time": "2026-04-21T23:08:19.544913"
+      }
+    ],
+    "timestamp": "2026-04-21T23:08:37.283605"
+  },
+  "aspect_schema": {
+    "content": "What the video is about \u2014 topic depth, originality, accuracy, creativity of ideas.",
+    "entertainment": "Humor, engagement, emotional impact, rewatchability, pacing of delivery.",
+    "creator": "Personality, delivery style, authenticity, trustworthiness, on-screen presence.",
+    "production": "Editing, visuals, audio quality, cinematography, thumbnail, length/pacing.",
+    "informativeness": "Whether the viewer learned something useful, actionable, or new."
+  },
+  "videos_scraped": {
+    "music": [
+      "dQw4w9WgXcQ",
+      "kJQP7kiw5Fk",
+      "JGwWNGJdvx8",
+      "RgKAFK5djSk",
+      "9bZkp7q19f0"
+    ],
+    "tech": [
+      "AF8d72mA41M",
+      "Q10_srZ-pbs",
+      "bhxhNIQBKJI",
+      "YQHsXMglC9A"
+    ],
+    "gaming": [
+      "QkkoHAzjnUs",
+      "8X2kIfS6fb8",
+      "hFcLyDb6niA",
+      "u3wS-Q2KBpk"
+    ],
+    "cooking": [
+      "bSYdABrPrtM",
+      "nswnUE2tmJk",
+      "j0_id5WvIXw",
+      "9lPXxFZHDts"
+    ],
+    "education": [
+      "HeQX2HjkcNo",
+      "S4RHjFB4KGs",
+      "JtDro55e1GY",
+      "r6sGWTCMz2k"
+    ],
+    "fitness": [
+      "eQTcMErJbxI",
+      "SpJwyAbwDBk",
+      "IwZVgOcnfQ8",
+      "vD-dEl7R2Bg"
+    ],
+    "entertainment": [
+      "WcWM_1hBu_c",
+      "9bqk6ZUsKyA",
+      "erLbbextvlY",
+      "EaqJgQOVZ9k"
+    ],
+    "film_analysis": [
+      "ryzOXAO0Npc",
+      "GfqD5WqChUQ",
+      "7vfqkvwW2fs",
+      "v4seDVfgwOg"
+    ],
+    "news_commentary": [
+      "3LopI4YeC4I",
+      "tHEOGrkhDp0",
+      "xguam0TKMw8",
+      "dLRLYHpS2DA"
+    ],
+    "lifestyle": [
+      "dA2FnziMCnk",
+      "arj7oStGLkU",
+      "5p248yoa3oE",
+      "iCvmsMzlF7o"
+    ],
+    "self_improvement": [
+      "36m1o-tM05g",
+      "ZXsQAXx_ao0",
+      "5MgBikgcWnY",
+      "Lp7E973zozc"
+    ]
+  }
+}
