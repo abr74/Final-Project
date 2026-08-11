@@ -1,0 +1,98 @@
+{
+  "3Blue1Brown": {
+    "video_id": "r6sGWTCMz2k",
+    "video_title": "But what is a Fourier series?  From heat flow to drawing with circles | DE4",
+    "url": "https://www.youtube.com/watch?v=r6sGWTCMz2k",
+    "author": "3Blue1Brown",
+    "author_url": "https://www.youtube.com/results?search_query=3Blue1Brown",
+    "category": "education"
+  },
+  "Binging with Babish": {
+    "video_id": "bSYdABrPrtM",
+    "video_title": "Sourdough Bread | Basics with Babish (feat. Joshua Weissman)",
+    "url": "https://www.youtube.com/watch?v=bSYdABrPrtM",
+    "author": "Binging with Babish",
+    "author_url": "https://www.youtube.com/results?search_query=Binging+with+Babish",
+    "category": "cooking"
+  },
+  "Ed Sheeran": {
+    "video_id": "JGwWNGJdvx8",
+    "video_title": "Ed Sheeran - Shape of You (Official Music Video)",
+    "url": "https://www.youtube.com/watch?v=JGwWNGJdvx8",
+    "author": "Ed Sheeran",
+    "author_url": "https://www.youtube.com/results?search_query=Ed+Sheeran",
+    "category": "music"
+  },
+  "Jesse James West": {
+    "video_id": "IwZVgOcnfQ8",
+    "video_title": "Busting 100 Fitness Myths in 24 Hours! - Ft. Jeff Nippard",
+    "url": "https://www.youtube.com/watch?v=IwZVgOcnfQ8",
+    "author": "Jesse James West",
+    "author_url": "https://www.youtube.com/results?search_query=Jesse+James+West",
+    "category": "fitness"
+  },
+  "MrBeast": {
+    "video_id": "9bqk6ZUsKyA",
+    "video_title": "I Spent 50 Hours Buried Alive",
+    "url": "https://www.youtube.com/watch?v=9bqk6ZUsKyA",
+    "author": "MrBeast",
+    "author_url": "https://www.youtube.com/results?search_query=MrBeast",
+    "category": "entertainment"
+  },
+  "Rick Astley": {
+    "video_id": "dQw4w9WgXcQ",
+    "video_title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "author": "Rick Astley",
+    "author_url": "https://www.youtube.com/results?search_query=Rick+Astley",
+    "category": "music"
+  },
+  "Rockstar Games": {
+    "video_id": "QkkoHAzjnUs",
+    "video_title": "Grand Theft Auto V Trailer",
+    "url": "https://www.youtube.com/watch?v=QkkoHAzjnUs",
+    "author": "Rockstar Games",
+    "author_url": "https://www.youtube.com/results?search_query=Rockstar+Games",
+    "category": "gaming"
+  },
+  "TED": {
+    "video_id": "iCvmsMzlF7o",
+    "video_title": "The Power of Vulnerability | Bren\u00e9 Brown | TED",
+    "url": "https://www.youtube.com/watch?v=iCvmsMzlF7o",
+    "author": "TED",
+    "author_url": "https://www.youtube.com/results?search_query=TED",
+    "category": "lifestyle"
+  },
+  "TEDx Talks": {
+    "video_id": "36m1o-tM05g",
+    "video_title": "My philosophy for a happy life | Sam Berns | TEDxMidAtlantic",
+    "url": "https://www.youtube.com/watch?v=36m1o-tM05g",
+    "author": "TEDx Talks",
+    "author_url": "https://www.youtube.com/results?search_query=TEDx+Talks",
+    "category": "self_improvement"
+  },
+  "Veritasium": {
+    "video_id": "AF8d72mA41M",
+    "video_title": "Why It Was Almost Impossible to Make the Blue LED",
+    "url": "https://www.youtube.com/watch?v=AF8d72mA41M",
+    "author": "Veritasium",
+    "author_url": "https://www.youtube.com/results?search_query=Veritasium",
+    "category": "tech"
+  },
+  "Will Tennyson": {
+    "video_id": "eQTcMErJbxI",
+    "video_title": "I Tested The Most Dangerous Exercises (ft. Jeff Nippard)",
+    "url": "https://www.youtube.com/watch?v=eQTcMErJbxI",
+    "author": "Will Tennyson",
+    "author_url": "https://www.youtube.com/results?search_query=Will+Tennyson",
+    "category": "fitness"
+  },
+  "officialpsy": {
+    "video_id": "9bZkp7q19f0",
+    "video_title": "PSY - GANGNAM STYLE(\uac15\ub0a8\uc2a4\ud0c0\uc77c) M/V",
+    "url": "https://www.youtube.com/watch?v=9bZkp7q19f0",
+    "author": "officialpsy",
+    "author_url": "https://www.youtube.com/results?search_query=officialpsy",
+    "category": "music"
+  }
+}

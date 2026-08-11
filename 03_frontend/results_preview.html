@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YouFeelings — Your Taste</title>
+<style>
+  :root{
+    --ink:#0B0B0C;      /* near-black ground */
+    --panel:#141416;
+    --line:#242427;
+    --red:#CC0000;
+    --red-soft:#FF4D4D;
+    --paper:#F2F0EC;    /* warm off-white, not pure white */
+    --mute:#8C8C94;
+    /* one hue per aspect - used consistently everywhere */
+    --a-content:#E4572E;
+    --a-entertainment:#F2B705;
+    --a-creator:#CC0000;
+    --a-production:#7A5AF8;
+    --a-informativeness:#17A398;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ink); color:var(--paper);
+    font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1060px;margin:0 auto;padding:44px 28px 80px}
+
+  /* ---------- masthead ---------- */
+  .mast{display:flex;align-items:baseline;gap:14px;margin-bottom:38px}
+  .mark{width:11px;height:11px;background:var(--red);border-radius:2px}
+  .mast h1{font-size:15px;letter-spacing:.16em;text-transform:uppercase;margin:0;font-weight:700}
+  .mast span{color:var(--mute);font-size:13px;margin-left:auto}
+
+  /* ---------- signature: the taste fingerprint ---------- */
+  .fingerprint{border-top:1px solid var(--line);padding-top:30px;margin-bottom:14px}
+  .eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute);margin:0 0 10px}
+  .lede{font-size:clamp(28px,4.4vw,46px);line-height:1.08;margin:0 0 26px;font-weight:700;letter-spacing:-.02em;max-width:15ch}
+  .lede em{font-style:normal;color:var(--red-soft)}
+
+  .bar{display:flex;height:52px;border-radius:6px;overflow:hidden;margin-bottom:12px}
+  .seg{position:relative;transition:flex-grow .5s ease}
+  .seg span{
+    position:absolute;left:9px;top:50%;transform:translateY(-50%);
+    font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;
+  }
+  .legend{display:flex;flex-wrap:wrap;gap:16px 22px;margin-bottom:8px}
+  .legend div{display:flex;align-items:center;gap:7px;font-size:12.5px;color:#C9C9D1}
+  .dot{width:9px;height:9px;border-radius:50%}
+  .fineprint{color:var(--mute);font-size:12.5px;margin:14px 0 0;max-width:62ch;line-height:1.55}
+
+  /* ---------- recommendations ---------- */
+  .sect{display:flex;align-items:baseline;gap:12px;margin:52px 0 18px}
+  .sect h2{font-size:19px;margin:0;font-weight:700;letter-spacing:-.01em}
+  .sect .count{color:var(--mute);font-size:13px}
+
+  .rec{
+    display:grid;grid-template-columns:52px 1fr auto;gap:18px;align-items:center;
+    padding:18px 20px;background:var(--panel);border:1px solid var(--line);
+    border-radius:10px;margin-bottom:10px;
+  }
+  .rank{font-size:20px;font-weight:700;color:var(--mute);font-variant-numeric:tabular-nums}
+  .rec h3{margin:0 0 3px;font-size:16.5px;font-weight:650;letter-spacing:-.01em}
+  .by{color:var(--mute);font-size:13px;margin:0 0 9px}
+  .why{font-size:13.5px;line-height:1.5;color:#BFBFC7;margin:0;max-width:64ch}
+  .why b{color:var(--paper);font-weight:600}
+
+  .score{text-align:right;min-width:132px}
+  .pct{font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .mix{display:flex;gap:3px;justify-content:flex-end;margin-top:7px}
+  .mix i{height:4px;border-radius:2px;display:block}
+  .mixkey{font-size:10.5px;color:var(--mute);margin-top:6px;letter-spacing:.04em}
+
+  .tag{
+    display:inline-block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+    padding:3px 8px;border-radius:4px;font-weight:700;color:#0B0B0C;margin-bottom:7px;
+  }
+
+  .foot{margin-top:46px;padding-top:22px;border-top:1px solid var(--line);
+        color:var(--mute);font-size:12.5px;line-height:1.6}
+
+  @media (max-width:640px){
+    .rec{grid-template-columns:36px 1fr;row-gap:12px}
+    .score{grid-column:1/-1;text-align:left}
+    .mix{justify-content:flex-start}
+  }
+  @media (prefers-reduced-motion:reduce){ .seg{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="mast">
+    <div class="mark"></div>
+    <h1>YouFeelings</h1>
+    <span>109 of your channels recognised</span>
+  </div>
+
+  <section class="fingerprint">
+    <p class="eyebrow">Your taste fingerprint</p>
+    <h2 class="lede">You watch for <em>what you learn</em> — and who's telling you.</h2>
+
+    <div class="bar" id="bar"></div>
+    <div class="legend" id="legend"></div>
+
+    <p class="fineprint">
+      Built from the five things viewers actually talk about in comments —
+      not from watch time. Read across: the wider the band, the more that
+      quality drives what you finish.
+    </p>
+  </section>
+
+  <div class="sect">
+    <h2>What to watch next</h2>
+    <span class="count" id="reccount"></span>
+  </div>
+  <div id="recs"></div>
+
+  <p class="foot">
+    Scored without collaborative data — these come from your own history and
+    what viewers say about each channel. Recommendations sharpen as more
+    people contribute their history.
+  </p>
+</div>
+
+<script>
+const ASPECT_INK = {
+  content:"#0B0B0C", entertainment:"#0B0B0C",
+  creator:"#F2F0EC", production:"#F2F0EC", informativeness:"#0B0B0C"
+};
+const ASPECT_COLOR = {
+  content:"var(--a-content)", entertainment:"var(--a-entertainment)",
+  creator:"var(--a-creator)", production:"var(--a-production)",
+  informativeness:"var(--a-informativeness)"
+};
+const SIGNAL_COLOR = { bert:"#17A398", ncf:"#7A5AF8", content:"#E4572E" };
+
+const data = {
+  num_watched_recognized:109,
+  mode:"cold_start",
+  aspect_profile:{content:0.058,entertainment:0.2381,creator:0.262,production:0.0739,informativeness:0.368},
+  recommendations:[
+    {title:"PRISMATIC by Tiësto 029",author:"Tiësto",match_percent:99.9,top_aspect:"informativeness",
+     why:"Channels you watch skew toward substance, and this one scores 0.94 on that. It also sits close to music you already play.",
+     signals:{bert:1.0,ncf:null,content:0.623}},
+    {title:"AVICII FOREVER (360° Visualizer)",author:"AviciiOfficialVEVO",match_percent:98.4,top_aspect:"informativeness",
+     why:"Strong on the qualities you return to, and adjacent to several channels in your history.",
+     signals:{bert:0.97,ncf:null,content:0.58}},
+    {title:"Night Changes",author:"OneDirectionVEVO",match_percent:90.7,top_aspect:"creator",
+     why:"You lean toward channels with a strong on-screen presence; viewers rate this one 0.88 there.",
+     signals:{bert:0.90,ncf:null,content:0.50}},
+    {title:"프로 티어 공략",author:"김프로KIMPRO",match_percent:88.2,top_aspect:"creator",
+     why:"Matches the creator-led style you watch most, and overlaps categories in your history.",
+     signals:{bert:0.88,ncf:null,content:0.44}},
+    {title:"bread gang — full set",author:"bread gang",match_percent:86.7,top_aspect:"entertainment",
+     why:"Sits in the entertainment band that makes up a quarter of your profile.",
+     signals:{bert:0.86,ncf:null,content:0.41}}
+  ]
+};
+
+// ---- fingerprint ----
+const entries = Object.entries(data.aspect_profile).sort((a,b)=>b[1]-a[1]);
+const bar = document.getElementById("bar"), legend = document.getElementById("legend");
+entries.forEach(([name,val])=>{
+  const d=document.createElement("div");
+  d.className="seg";
+  d.style.flexGrow=val; d.style.flexBasis=0;
+  d.style.background=ASPECT_COLOR[name];
+  if(val>0.13) d.innerHTML=`<span style="color:${ASPECT_INK[name]}">${Math.round(val*100)}%</span>`;
+  d.title=`${name}: ${(val*100).toFixed(1)}%`;
+  bar.appendChild(d);
+
+  const l=document.createElement("div");
+  l.innerHTML=`<i class="dot" style="background:${ASPECT_COLOR[name]}"></i>`+
+              `${name.charAt(0).toUpperCase()+name.slice(1)} · ${(val*100).toFixed(1)}%`;
+  legend.appendChild(l);
+});
+
+// ---- recommendations ----
+const recs=document.getElementById("recs");
+document.getElementById("reccount").textContent = data.recommendations.length + " picks";
+data.recommendations.forEach((r,i)=>{
+  const el=document.createElement("article");
+  el.className="rec";
+  const active=Object.entries(r.signals).filter(([,v])=>v!==null&&v>0);
+  const mix=active.map(([k,v])=>
+    `<i style="background:${SIGNAL_COLOR[k]};width:${Math.max(10,v*54)}px"></i>`).join("");
+  el.innerHTML=`
+    <div class="rank">${String(i+1).padStart(2,"0")}</div>
+    <div>
+      <span class="tag" style="background:${ASPECT_COLOR[r.top_aspect]};color:${ASPECT_INK[r.top_aspect]}">${r.top_aspect}</span>
+      <h3>${r.title}</h3>
+      <p class="by">${r.author}</p>
+      <p class="why">${r.why}</p>
+    </div>
+    <div class="score">
+      <div class="pct">${r.match_percent}%</div>
+      <div class="mix">${mix}</div>
+      <div class="mixkey">${active.map(([k])=>k).join(" + ")}</div>
+    </div>`;
+  recs.appendChild(el);
+});
+</script>
+</body>
+</html>

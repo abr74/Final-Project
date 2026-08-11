@@ -1,0 +1,98 @@
+{
+  "3Blue1Brown": {
+    "content": 1.0,
+    "entertainment": 0.4,
+    "creator": 1.0,
+    "production": 0.5,
+    "informativeness": 1.0,
+    "bert_overall": 0.78
+  },
+  "Binging with Babish": {
+    "content": 1.0,
+    "entertainment": 0.4167,
+    "creator": 1.0,
+    "production": 0.5,
+    "informativeness": 1.0,
+    "bert_overall": 0.7833
+  },
+  "Ed Sheeran": {
+    "content": 1.0,
+    "entertainment": 0.2,
+    "creator": 1.0,
+    "production": 0.5,
+    "informativeness": 1.0,
+    "bert_overall": 0.74
+  },
+  "Jesse James West": {
+    "content": 1.0,
+    "entertainment": 0.2727,
+    "creator": 1.0,
+    "production": 0.5,
+    "informativeness": 1.0,
+    "bert_overall": 0.7545
+  },
+  "MrBeast": {
+    "content": 1.0,
+    "entertainment": 0.25,
+    "creator": 1.0,
+    "production": 0.5,
+    "informativeness": 1.0,
+    "bert_overall": 0.75
+  },
+  "Rick Astley": {
+    "content": 1.0,
+    "entertainment": 0.6364,
+    "creator": 1.0,
+    "production": 0.5,
+    "informativeness": 1.0,
+    "bert_overall": 0.8273
+  },
+  "Rockstar Games": {
+    "content": 1.0,
+    "entertainment": 0.0,
+    "creator": 1.0,
+    "production": 0.5,
+    "informativeness": 1.0,
+    "bert_overall": 0.7
+  },
+  "TED": {
+    "content": 1.0,
+    "entertainment": 0.3077,
+    "creator": 1.0,
+    "production": 0.5,
+    "informativeness": 1.0,
+    "bert_overall": 0.7615
+  },
+  "TEDx Talks": {
+    "content": 1.0,
+    "entertainment": 0.1333,
+    "creator": 1.0,
+    "production": 0.5,
+    "informativeness": 1.0,
+    "bert_overall": 0.7267
+  },
+  "Veritasium": {
+    "content": 1.0,
+    "entertainment": 0.6818,
+    "creator": 1.0,
+    "production": 0.5,
+    "informativeness": 1.0,
+    "bert_overall": 0.8364
+  },
+  "Will Tennyson": {
+    "content": 1.0,
+    "entertainment": 0.3148,
+    "creator": 1.0,
+    "production": 0.5,
+    "informativeness": 1.0,
+    "bert_overall": 0.763
+  },
+  "officialpsy": {
+    "content": 1.0,
+    "entertainment": 0.5,
+    "creator": 1.0,
+    "production": 0.5,
+    "informativeness": 1.0,
+    "bert_overall": 0.8
+  }
+}
