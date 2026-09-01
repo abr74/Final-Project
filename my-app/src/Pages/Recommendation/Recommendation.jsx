@@ -1,36 +1,81 @@
 import React, { useEffect, useState } from "react";
 import "./Recommendation.css";
+import Loading from "../Loading/Loading";
 
 const DATA_URL =
   "https://hkv39v0ul7.execute-api.us-east-1.amazonaws.com/prod/recommendations";
 
-export default function Recommendations() {
+const POLL_INTERVAL_MS = 1000;
+const MAX_POLL_ATTEMPTS = 180; // ~3 minutes
+
+export default function Recommendations({ userId }) {
   const [data, setData] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    async function fetchRecommendations() {
+    if (!userId) {
+      setError("Missing upload session. Please upload your Takeout ZIP again.");
+      setProcessing(false);
+      return;
+    }
+
+    let cancelled = false;
+    let timeoutId;
+    let attempts = 0;
+
+    async function poll() {
       try {
-        const response = await fetch(DATA_URL);
+        const response = await fetch(
+          `${DATA_URL}?userId=${encodeURIComponent(userId)}`
+        );
+
+        if (response.status === 404) {
+          const body = await response.json().catch(() => ({}));
+          attempts += 1;
+
+          if (body.status === "processing" && attempts < MAX_POLL_ATTEMPTS) {
+            if (!cancelled) {
+              timeoutId = setTimeout(poll, POLL_INTERVAL_MS);
+            }
+            return;
+          }
+
+          throw new Error(
+            body.message || "Recommendations are taking longer than expected."
+          );
+        }
 
         if (!response.ok) {
           throw new Error("Failed to fetch recommendation data");
         }
 
         const json = await response.json();
-        setData(json);
-        setRecommendations(json.recommendations || []);
+        if (!cancelled) {
+          setData(json);
+          setRecommendations(json.recommendations || []);
+          setProcessing(false);
+        }
       } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setError(err.message);
+          setProcessing(false);
+        }
       }
     }
 
-    fetchRecommendations();
-  }, []);
+    poll();
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
+  }, [userId]);
+
+  if (processing) {
+    return <Loading />;
+  }
 
   return (
     <div className="rec_page">
@@ -44,11 +89,9 @@ export default function Recommendations() {
           </div>
         </div>
 
-        {loading && <p className="rec_status">Loading recommendations...</p>}
-
         {error && <p className="rec_error">Error: {error}</p>}
 
-        {!loading && !error && (
+        {!error && (
           <>
             <div className="rec_summary">
               <div>

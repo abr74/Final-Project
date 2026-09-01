@@ -4,12 +4,12 @@ import Landing from "./Pages/Landing/Landing";
 import Recommendations from "./Pages/Recommendation/Recommendation";
 
 function App() {
-  const [uploaded, setUploaded] = useState(false);
+  const [userId, setUserId] = useState(null);
 
-  return uploaded ? (
-    <Recommendations />
+  return userId ? (
+    <Recommendations userId={userId} />
   ) : (
-    <Landing onUploadSuccess={() => setUploaded(true)} />
+    <Landing onUploadSuccess={(uploadId) => setUserId(uploadId)} />
   );
 }
 

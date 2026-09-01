@@ -46,7 +46,7 @@ export default function Landing({ onUploadSuccess }) {
         uploadData = JSON.parse(uploadData.body);
       }
 
-      if (!uploadData.uploadUrl) {
+      if (!uploadData.uploadUrl || !uploadData.uploadId) {
         throw new Error("Upload URL missing from Lambda response.");
       }
 
@@ -63,9 +63,7 @@ export default function Landing({ onUploadSuccess }) {
 
       setMessage("Upload complete. Processing recommendations...");
 
-      setTimeout(() => {
-        onUploadSuccess();
-      }, 3000);
+      onUploadSuccess(uploadData.uploadId);
     } catch (error) {
       console.error(error);
       setMessage("");
